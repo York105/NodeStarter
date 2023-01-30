@@ -1,0 +1,120 @@
+version: "3.9"
+services:
+
+  url_api:
+    build:
+      dockerfile: Dockerfile
+      context: ./url_api
+    ports:
+      - '9001:9001'    
+    environment:
+      - TZ=Asia/Kolkata
+      - PORT=9001
+    networks:
+      - private
+
+
+  test_api:
+    build:
+      dockerfile: Dockerfile
+      context: ./test_api
+    ports:
+      - '9002:9002'    
+    environment:
+      - TZ=Asia/Kolkata
+      - PORT=9002
+    networks:
+      - private
+
+
+  scheduler_api:
+    build:
+      dockerfile: Dockerfile
+      context: ./scheduler_api
+    ports:
+      - '9003:9003'      
+    environment:
+      - TZ=Asia/Kolkata
+      - PORT=9003
+    networks:
+      - private
+
+
+  crawler_api:    
+    build:
+      dockerfile: Dockerfile
+      context: ./crawler_api
+    ports:
+      - '9004:9004'      
+    environment:
+      - TZ=Asia/Kolkata
+      - PORT=9004
+    networks:
+      - private
+
+
+  frontend:
+    build:
+      dockerfile: Dockerfile
+      context: ./frontend
+    ports:
+      - '9005:9005'      
+    environment:
+      - TZ=Asia/Kolkata
+      - PORT=9005
+    networks:
+      - private
+
+
+  mongo_database:
+    image: mongo:6.0
+    restart: always
+    container_name: mongo_database
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=automated_testing_framework
+      - TZ='Asia/Kolkata'
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./volumes/mongo:/data/db
+    networks:
+      - private
+
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    depends_on:
+      - mongo_database
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_ROOT_USER}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_ROOT_PASSWORD}
+      - ME_CONFIG_MONGODB_SERVER=mongo_database
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_BASICAUTH_USERNAME=${MONGOEXPRESS_LOGIN}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${MONGOEXPRESS_PASSWORD}
+      - TZ='Asia/Kolkata'
+    networks:
+      - private
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    environment:
+      - TZ='Asia/Kolkata'
+    volumes:
+      - ./nginx/html:/usr/share/nginx/html
+      - ./code:/code
+    ports:
+      - 9090:80
+    networks:  
+      - private
+
+networks:
+  private:
+    driver: bridge
+  

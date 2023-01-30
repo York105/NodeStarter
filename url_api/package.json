@@ -1,0 +1,21 @@
+{
+    "name": "url_api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "node index.js"
+    },
+    "author": "Ashit Gajwani",
+    "license": "ISC",
+    "dependencies": {
+      "axios": "^0.26.1",
+      "body-parser": "^1.20.0",
+      "express": "^4.17.3",
+      "lodash": "^4.17.21",
+      "nodemon": "^2.0.15",
+      "mongoose": "^6.7.2"
+    }
+  }
