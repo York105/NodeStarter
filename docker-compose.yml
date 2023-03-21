@@ -52,6 +52,16 @@ services:
     networks:
       - private
 
+  fetch_api:
+    build:
+      dockerfile: Dockerfile
+      context: ./fetch_api
+    ports:
+      - '8998:8998'
+    environment:
+      - TZ=Asia/Kolkata      
+    networks:
+      - private
 
   frontend:
     build:
